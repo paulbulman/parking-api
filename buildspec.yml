@@ -6,5 +6,9 @@ phases:
       nodejs: 10
   build:
     commands:
-      - zip -r src.zip .
-      - aws lambda update-function-code --function-name $FUNCTION_NAME --zip-file fileb://src.zip
+      - npm i
+      - npm t
+  post_build:
+    commands:
+      - chmod +x deploy.sh
+      - ./deploy.sh
