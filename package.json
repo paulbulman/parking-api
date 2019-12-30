@@ -21,6 +21,7 @@
     "jest": "^24.9.0"
   },
   "dependencies": {
+    "aws-lambda-router": "^0.6.2",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.27"
   }
