@@ -1,5 +1,6 @@
 const router = require("aws-lambda-router");
-const calculations = require("./calculations");
+const moment = require("moment");
+const calculations = require("./calculations")(moment);
 
 exports.handler = router.handler({
   proxyIntegration: {

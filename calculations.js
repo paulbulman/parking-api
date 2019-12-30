@@ -1,21 +1,16 @@
-var moment = require("moment-timezone");
-
-const getCurrentDate = currentMoment =>
-  currentMoment
-    .clone()
-    .tz("Europe/London")
-    .startOf("date");
-
-const createGetCurrentDateString = currentMoment => () =>
-  getCurrentDate(currentMoment).format("YYYY-MM-DD");
-
-const getCurrentDateString = createGetCurrentDateString(moment());
+const moment = require("moment-timezone");
 
 // TODO: Bank holidays
 const isWorkingDay = date => date.isoWeekday() !== 6 && date.isoWeekday() !== 7;
 
-const createGetCurrentActiveDateStrings = currentMoment => () => {
-  const currentDate = getCurrentDate(currentMoment);
+const getCurrentDate = getMoment =>
+  getMoment()
+    .clone()
+    .tz("Europe/London")
+    .startOf("date");
+
+const getCurrentActiveDates = getMoment => {
+  const currentDate = getCurrentDate(getMoment);
 
   const lastDayOfNextMonth = currentDate
     .clone()
@@ -32,14 +27,16 @@ const createGetCurrentActiveDateStrings = currentMoment => () => {
     activeDates.push(d.clone());
   }
 
-  return activeDates.filter(isWorkingDay).map(d => d.format("YYYY-MM-DD"));
+  return activeDates.filter(isWorkingDay);
 };
 
-const getCurrentActiveDateStrings = createGetCurrentActiveDateStrings(moment());
+module.exports = getMoment => {
+  const toDateString = date => date.format("YYYY-MM-DD");
 
-module.exports = {
-  createGetCurrentDateString,
-  getCurrentDateString,
-  createGetCurrentActiveDateStrings,
-  getCurrentActiveDateStrings
+  return {
+    getCurrentDateString: () => toDateString(getCurrentDate(getMoment)),
+    getCurrentActiveDateStrings: () => getCurrentActiveDates(getMoment).map(
+      toDateString
+    )
+  };
 };
