@@ -19,5 +19,9 @@
   "homepage": "https://github.com/paulbulman/parking-datecalculations#readme",
   "devDependencies": {
     "jest": "^24.9.0"
+  },
+  "dependencies": {
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.27"
   }
 }
