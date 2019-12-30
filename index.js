@@ -8,9 +8,7 @@ exports.handler = router.handler({
       {
         path: "/getCurrentDate",
         method: "GET",
-        action: (request, context) => {
-          return calculations.getCurrentDate();
-        }
+        action: (request, context) => calculations.getCurrentDateString()
       }
     ]
   }

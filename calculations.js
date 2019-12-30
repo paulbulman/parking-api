@@ -1,8 +1,11 @@
 var moment = require("moment-timezone");
 
-const createGetCurrentDate = currentMoment => () =>
-  currentMoment.tz("Europe/London").format("YYYY-MM-DD");
+const getCurrentDate = currentMoment =>
+  currentMoment.tz("Europe/London").startOf("date");
 
-const getCurrentDate = createGetCurrentDate(moment());
+const createGetCurrentDateString = currentMoment => () =>
+  getCurrentDate(currentMoment).format("YYYY-MM-DD");
 
-module.exports = { createGetCurrentDate, getCurrentDate };
+const getCurrentDateString = createGetCurrentDateString(moment());
+
+module.exports = { createGetCurrentDateString, getCurrentDateString };
