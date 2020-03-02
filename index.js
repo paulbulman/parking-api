@@ -1,21 +1,14 @@
 const router = require("aws-lambda-router");
-const moment = require("moment");
-const bankHolidays = require("./bankHolidays");
-const dateCalculations = require("./dateCalculations")(moment, bankHolidays);
+const registrationNumbers = require("registrationNumbers");
 
 exports.handler = router.handler({
   proxyIntegration: {
     cors: true,
     routes: [
       {
-        path: "/getCurrentDate",
+        path: "/registrationNumbers",
         method: "GET",
-        action: (request, context) => dateCalculations.getCurrentDateString()
-      },
-      {
-        path: "/getCurrentActiveDates",
-        method: "GET",
-        action: (request, context) => dateCalculations.getCurrentActiveDateStrings()
+        action: async (request, context) => await registrationNumbers.fetch()
       }
     ]
   }
