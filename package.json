@@ -1,5 +1,5 @@
 {
-  "name": "parking-datecalculations",
+  "name": "parking-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/paulbulman/parking-datecalculations.git"
+    "url": "git+https://github.com/paulbulman/parking-api.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/paulbulman/parking-datecalculations/issues"
+    "url": "https://github.com/paulbulman/parking-api/issues"
   },
-  "homepage": "https://github.com/paulbulman/parking-datecalculations#readme",
+  "homepage": "https://github.com/paulbulman/parking-api#readme",
   "devDependencies": {
     "jest": "^24.9.0"
   },

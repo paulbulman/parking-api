@@ -1,21 +1,21 @@
 const moment = require("moment");
-const calculations = require("./calculations");
+const dateCalculations = require("./dateCalculations");
 
-const createCalculations = momentInput =>
-  calculations(() => moment.utc(momentInput), []);
+const createDateCalculations = momentInput =>
+  dateCalculations(() => moment.utc(momentInput), []);
 
 describe("get current date", () => {
   it("uses Europe/London time zone", () => {
-    const winter = createCalculations("2019-12-30T23:00:00Z");
+    const winter = createDateCalculations("2019-12-30T23:00:00Z");
     expect(winter.getCurrentDateString()).toBe("2019-12-30");
 
-    const summer = createCalculations("2019-06-30T23:00:00Z");
+    const summer = createDateCalculations("2019-06-30T23:00:00Z");
     expect(summer.getCurrentDateString()).toBe("2019-07-01");
   });
 });
 
 describe("get current active dates", () => {
-  const result = createCalculations(
+  const result = createDateCalculations(
     "2020-02-27T23:00:00Z"
   ).getCurrentActiveDateStrings();
 
@@ -46,7 +46,7 @@ describe("get current active dates", () => {
   });
 
   it("does not contain a bank holiday in the period", () => {
-    const result = calculations(() => moment.utc("2019-12-30T23:00:00Z"), [
+    const result = dateCalculations(() => moment.utc("2019-12-30T23:00:00Z"), [
       moment("2020-01-01")
     ]).getCurrentActiveDateStrings();
 
