@@ -1,6 +1,7 @@
 const router = require("aws-lambda-router");
 const registrationNumbers = require("registrationNumbers");
 const requests = require("requests");
+const reservations = require("reservations");
 
 exports.handler = router.handler({
   proxyIntegration: {
@@ -22,6 +23,11 @@ exports.handler = router.handler({
         method: "POST",
         action: async (request, context) =>
           await requests.update(request.paths.userId, request.body)
+      },
+      {
+        path: "/reservations",
+        method: "GET",
+        action: async (request, context) => await reservations.fetch()
       }
     ]
   }
