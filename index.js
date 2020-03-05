@@ -2,6 +2,7 @@ const router = require("aws-lambda-router");
 const registrationNumbers = require("registrationNumbers");
 const requests = require("requests");
 const reservations = require("reservations");
+const users = require("users");
 
 exports.handler = router.handler({
   proxyIntegration: {
@@ -28,6 +29,11 @@ exports.handler = router.handler({
         path: "/reservations",
         method: "GET",
         action: async (request, context) => await reservations.fetch()
+      },
+      {
+        path: "/users",
+        method: "GET",
+        action: async (request, context) => await users.fetch()
       }
     ]
   }
