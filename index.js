@@ -31,6 +31,11 @@ exports.handler = router.handler({
         action: async (request, context) => await reservations.fetch()
       },
       {
+        path: "/reservations",
+        method: "POST",
+        action: async (request, context) => await reservations.update()
+      },
+      {
         path: "/users",
         method: "GET",
         action: async (request, context) => await users.fetch()
