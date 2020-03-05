@@ -2,6 +2,7 @@ const router = require("aws-lambda-router");
 const registrationNumbers = require("registrationNumbers");
 const requests = require("requests");
 const reservations = require("reservations");
+const summary = require("summary");
 const users = require("users");
 
 exports.handler = router.handler({
@@ -34,6 +35,12 @@ exports.handler = router.handler({
         path: "/reservations",
         method: "POST",
         action: async (request, context) => await reservations.update()
+      },
+      {
+        path: "/summary/:userId",
+        method: "GET",
+        action: async (request, context) =>
+          await summary.fetch(request.paths.userId)
       },
       {
         path: "/users",
