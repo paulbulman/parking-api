@@ -1,4 +1,5 @@
 const router = require("aws-lambda-router");
+const profile = require("profile");
 const registrationNumbers = require("registrationNumbers");
 const requests = require("requests");
 const reservations = require("reservations");
@@ -9,6 +10,18 @@ exports.handler = router.handler({
   proxyIntegration: {
     cors: true,
     routes: [
+      {
+        path: "/profile/:userId",
+        method: "GET",
+        action: async (request, context) =>
+          await profile.fetch(request.paths.userId)
+      },
+      {
+        path: "/profile/:userId",
+        method: "POST",
+        action: async (request, context) =>
+          await profile.update(request.paths.userId, request.body)
+      },
       {
         path: "/registrationNumbers",
         method: "GET",
