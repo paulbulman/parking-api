@@ -1,48 +1,40 @@
-const fetchAll = async () => [
-  {
-    userId: "1",
-    firstName: "Person",
-    lastName: "1",
-    registrationNumber: "AB123CDE",
-    alternativeRegistrationNumber: "X789XZ",
-    commuteDistance: "3"
-  },
-  {
-    userId: "2",
-    firstName: "Person",
-    lastName: "2",
-    registrationNumber: "CD234DEF",
-    alternativeRegistrationNumber: "Y789YZ",
-    commuteDistance: "2"
-  },
-  {
-    userId: "3",
-    firstName: "Person",
-    lastName: "3",
-    registrationNumber: "EF234EFG",
-    alternativeRegistrationNumber: "Z789ZZ",
-    commuteDistance: "7"
+const mapItem = item => ({
+  userId: item.PK.substr(5),
+  firstName: item.firstName,
+  lastName: item.lastName,
+  registrationNumber: item.registrationNumber,
+  alternativeRegistrationNumber: item.alternativeRegistrationNumber,
+  commuteDistance: item.commuteDistance
+});
+
+const fetchAll = async db => {
+  const params = {
+    TableName: process.env.TABLE_NAME,
+    IndexName: "SK-PK-index",
+    KeyConditionExpression: "SK = :sk",
+    ExpressionAttributeValues: { ":sk": "PROFILE" }
+  };
+
+  try {
+    const data = await db.query(params).promise();
+    return data.Items.map(mapItem);
+  } catch (error) {
+    console.error("Unable to fetch user", JSON.stringify(error));
   }
-];
+};
 
 const fetch = async (db, userId) => {
   const params = {
     TableName: process.env.TABLE_NAME,
     Key: {
       PK: `USER#${userId}`,
-      SK: `#PROFILE#${userId}`
+      SK: "PROFILE"
     }
   };
 
   try {
     const data = await db.get(params).promise();
-    return {
-      firstName: data.Item.firstName,
-      lastName: data.Item.lastName,
-      registrationNumber: data.Item.registrationNumber,
-      alternativeRegistrationNumber: data.Item.alternativeRegistrationNumber,
-      commuteDistance: data.Item.commuteDistance
-    };
+    return mapItem(data.Item);
   } catch (error) {
     console.error("Unable to fetch user", JSON.stringify(error));
   }
@@ -55,7 +47,7 @@ const update = async (db, userId, userData) => {
     TableName: process.env.TABLE_NAME,
     Key: {
       PK: `USER#${userId}`,
-      SK: `#PROFILE#${userId}`
+      SK: "PROFILE"
     },
     UpdateExpression:
       "set firstName = :firstName, lastName=:lastName, registrationNumber=:registrationNumber, alternativeRegistrationNumber=:alternativeRegistrationNumber, commuteDistance=:commuteDistance",

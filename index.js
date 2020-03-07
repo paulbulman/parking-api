@@ -24,7 +24,7 @@ exports.handler = router.handler({
       {
         path: "/manageUsers",
         method: "GET",
-        action: async (request, context) => await manageUsers.fetchAll()
+        action: async (request, context) => await manageUsers.fetchAll(db)
       },
       {
         path: "/manageUsers/:userId",

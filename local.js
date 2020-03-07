@@ -24,7 +24,7 @@ const port = 4000;
 
 app.use(cors());
 app.get("/manageUsers/", async (req, res) => {
-  res.send(await manageUsers.fetchAll());
+  res.send(await manageUsers.fetchAll(db));
 });
 
 app.get("/manageUsers/:userId", async (req, res) => {
