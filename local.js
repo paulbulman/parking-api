@@ -75,7 +75,7 @@ app.get("/summary/:userId", async (req, res) => {
 });
 
 app.get("/users", async (req, res) => {
-  res.send(await users.fetch());
+  res.send(await users.fetch(db));
 });
 
 app.listen(port, () => console.log(`Mock API server running on port ${port}`));
