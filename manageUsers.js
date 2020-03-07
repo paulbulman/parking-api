@@ -34,8 +34,8 @@ const fetch = async userId => ({
   commuteDistance: "3"
 });
 
-const update = async userId => {
-  console.log("Updating user", userId);
+const update = async (userId, userData) => {
+  console.log("Updating user", userId, userData);
 
   return "User updated successfully";
 };
