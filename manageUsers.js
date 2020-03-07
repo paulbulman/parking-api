@@ -1,4 +1,4 @@
-const fetch = async () => [
+const fetchAll = async () => [
   {
     userId: "1",
     firstName: "Person",
@@ -25,4 +25,25 @@ const fetch = async () => [
   }
 ];
 
-module.exports = { fetch };
+const fetch = async userId => ({
+  userId: "1",
+  firstName: "Person",
+  lastName: "1",
+  registrationNumber: "AB123CDE",
+  alternativeRegistrationNumber: "X789XZ",
+  commuteDistance: "3"
+});
+
+const update = async userId => {
+  console.log("Updating user", userId);
+
+  return "User updated successfully";
+};
+
+const del = async userId => {
+  console.log("Deleting user", userId);
+
+  return "User deleted successfully";
+};
+
+module.exports = { fetchAll, fetch, update, del };

@@ -14,8 +14,25 @@ exports.handler = router.handler({
       {
         path: "/manageUsers",
         method: "GET",
+        action: async (request, context) => await manageUsers.fetchAll()
+      },
+      {
+        path: "/manageUsers/:userId",
+        method: "GET",
         action: async (request, context) =>
-          await manageUsers.fetch()
+          await manageUsers.fetch(request.paths.userId)
+      },
+      {
+        path: "/manageUsers/:userId",
+        method: "POST",
+        action: async (request, context) =>
+          await manageUsers.update(request.paths.userId)
+      },
+      {
+        path: "/manageUsers/:userId",
+        method: "DELETE",
+        action: async (request, context) =>
+          await manageUsers.del(request.paths.userId)
       },
       {
         path: "/profile/:userId",
