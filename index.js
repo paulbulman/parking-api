@@ -1,4 +1,3 @@
-const router = require("aws-lambda-router");
 const manageUsers = require("manageUsers");
 const profile = require("profile");
 const registrationNumbers = require("registrationNumbers");
@@ -6,6 +5,17 @@ const requests = require("requests");
 const reservations = require("reservations");
 const summary = require("summary");
 const users = require("users");
+
+const AWS = require("aws-sdk");
+
+AWS.config.update({
+  region: "eu-west-2",
+  endpoint: "https://dynamodb.eu-west-2.amazonaws.com"
+});
+
+const db = new AWS.DynamoDB.DocumentClient();
+
+const router = require("aws-lambda-router");
 
 exports.handler = router.handler({
   proxyIntegration: {
@@ -20,13 +30,13 @@ exports.handler = router.handler({
         path: "/manageUsers/:userId",
         method: "GET",
         action: async (request, context) =>
-          await manageUsers.fetch(request.paths.userId)
+          await manageUsers.fetch(db, request.paths.userId)
       },
       {
         path: "/manageUsers/:userId",
         method: "POST",
         action: async (request, context) =>
-          await manageUsers.update(request.paths.userId)
+          await manageUsers.update(db, request.paths.userId, request.body)
       },
       {
         path: "/manageUsers/:userId",
@@ -71,7 +81,8 @@ exports.handler = router.handler({
       {
         path: "/reservations",
         method: "POST",
-        action: async (request, context) => await reservations.update()
+        action: async (request, context) =>
+          await reservations.update(request.body)
       },
       {
         path: "/summary/:userId",
