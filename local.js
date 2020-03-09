@@ -30,7 +30,7 @@ app.get("/manageUsers/", async (req, res) => {
 app.get("/manageUsers/:userId", async (req, res) => {
   res.send(await manageUsers.fetch(db, req.params["userId"]));
 });
-app.post("/manageUsers/:userId", (req, res) => {
+app.put("/manageUsers/:userId", (req, res) => {
   textBody(req, res, async function(err, body) {
     res.send(await manageUsers.update(db, req.params["userId"], JSON.parse(body)));
   });
@@ -42,7 +42,7 @@ app.delete("/manageUsers/:userId", async (req, res) => {
 app.get("/profile/:userId", async (req, res) => {
   res.send(await profile.fetch(db, req.params["userId"]));
 });
-app.post("/profile/:userId", async (req, res) => {
+app.put("/profile/:userId", async (req, res) => {
   textBody(req, res, async function(err, body) {
     res.send(await profile.update(db, req.params["userId"], JSON.parse(body)));
   });

@@ -34,7 +34,7 @@ exports.handler = router.handler({
       },
       {
         path: "/manageUsers/:userId",
-        method: "POST",
+        method: "PUT",
         action: async (request, context) =>
           await manageUsers.update(db, request.paths.userId, request.body)
       },
@@ -52,7 +52,7 @@ exports.handler = router.handler({
       },
       {
         path: "/profile/:userId",
-        method: "POST",
+        method: "PUT",
         action: async (request, context) =>
           await profile.update(db, request.paths.userId, request.body)
       },
