@@ -12,11 +12,9 @@ const textBody = require("body");
 
 const AWS = require("aws-sdk");
 
-AWS.config.update({
-  region: "eu-west-2",
-  endpoint: "https://dynamodb.eu-west-2.amazonaws.com"
-});
+AWS.config.update({ region: "eu-west-2" });
 
+const cognito = new AWS.CognitoIdentityServiceProvider();
 const db = new AWS.DynamoDB.DocumentClient();
 
 const app = express();
@@ -30,9 +28,16 @@ app.get("/manageUsers/", async (req, res) => {
 app.get("/manageUsers/:userId", async (req, res) => {
   res.send(await manageUsers.fetch(db, req.params["userId"]));
 });
+app.post("/manageUsers/", (req, res) => {
+  textBody(req, res, async function(err, body) {
+    res.send(await manageUsers.add(cognito, db, JSON.parse(body)));
+  });
+});
 app.put("/manageUsers/:userId", (req, res) => {
   textBody(req, res, async function(err, body) {
-    res.send(await manageUsers.update(db, req.params["userId"], JSON.parse(body)));
+    res.send(
+      await manageUsers.update(db, req.params["userId"], JSON.parse(body))
+    );
   });
 });
 app.delete("/manageUsers/:userId", async (req, res) => {

@@ -8,11 +8,9 @@ const users = require("users");
 
 const AWS = require("aws-sdk");
 
-AWS.config.update({
-  region: "eu-west-2",
-  endpoint: "https://dynamodb.eu-west-2.amazonaws.com"
-});
+AWS.config.update({ region: "eu-west-2" });
 
+const cognito = new AWS.CognitoIdentityServiceProvider();
 const db = new AWS.DynamoDB.DocumentClient();
 
 const router = require("aws-lambda-router");
@@ -31,6 +29,12 @@ exports.handler = router.handler({
         method: "GET",
         action: async (request, context) =>
           await manageUsers.fetch(db, request.paths.userId)
+      },
+      {
+        path: "/manageUsers/",
+        method: "POST",
+        action: async (request, context) =>
+          await manageUsers.add(cognito, db, request.body)
       },
       {
         path: "/manageUsers/:userId",

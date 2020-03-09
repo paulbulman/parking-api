@@ -44,6 +44,37 @@ const fetch = async (db, userId) => {
   }
 };
 
+const add = async (cognito, db, userData) => {
+  console.log("Adding user", userData);
+
+  try {
+    var cognitoParams = {
+      UserPoolId: process.env.USER_POOL_ID,
+      Username: userData.emailAddress,
+      UserAttributes: [{ Name: "email", Value: userData.emailAddress }]
+    };
+
+    const cognitoResponse = await cognito
+      .adminCreateUser(cognitoParams)
+      .promise();
+
+    const userName = cognitoResponse.User.Username;
+
+    const dbParams = {
+      TableName: process.env.TABLE_NAME,
+      Item: {
+        PK: `USER#${userName}`,
+        SK: "PROFILE",
+        emailAddress: userData.emailAddress
+      }
+    };
+
+    await db.put(dbParams).promise();
+  } catch (error) {
+    console.error("Unable to add user", JSON.stringify(error));
+  }
+};
+
 const update = async (db, userId, userData) => {
   console.log("Updating user", userId, userData);
 
@@ -80,4 +111,4 @@ const del = async userId => {
   return "User deleted successfully";
 };
 
-module.exports = { fetchAll, fetch, update, del };
+module.exports = { fetchAll, fetch, add, update, del };
