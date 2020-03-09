@@ -7,6 +7,7 @@ const fetch = async db => {
   const params = {
     TableName: process.env.TABLE_NAME,
     IndexName: "SK-PK-index",
+    ProjectionExpression:"PK, firstName, lastName",
     KeyConditionExpression: "SK = :sk",
     ExpressionAttributeValues: { ":sk": "PROFILE" }
   };

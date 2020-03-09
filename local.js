@@ -40,16 +40,16 @@ app.delete("/manageUsers/:userId", async (req, res) => {
 });
 
 app.get("/profile/:userId", async (req, res) => {
-  res.send(await profile.fetch(req.params["userId"]));
+  res.send(await profile.fetch(db, req.params["userId"]));
 });
 app.post("/profile/:userId", async (req, res) => {
   textBody(req, res, async function(err, body) {
-    res.send(await profile.update(req.params["userId"], JSON.parse(body)));
+    res.send(await profile.update(db, req.params["userId"], JSON.parse(body)));
   });
 });
 
 app.get("/registrationNumbers", async (req, res) => {
-  res.send(await registrationNumbers.fetch());
+  res.send(await registrationNumbers.fetch(db));
 });
 
 app.get("/requests/:userId", async (req, res) => {

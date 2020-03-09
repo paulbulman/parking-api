@@ -48,18 +48,18 @@ exports.handler = router.handler({
         path: "/profile/:userId",
         method: "GET",
         action: async (request, context) =>
-          await profile.fetch(request.paths.userId)
+          await profile.fetch(db, request.paths.userId)
       },
       {
         path: "/profile/:userId",
         method: "POST",
         action: async (request, context) =>
-          await profile.update(request.paths.userId, request.body)
+          await profile.update(db, request.paths.userId, request.body)
       },
       {
         path: "/registrationNumbers",
         method: "GET",
-        action: async (request, context) => await registrationNumbers.fetch()
+        action: async (request, context) => await registrationNumbers.fetch(db)
       },
       {
         path: "/requests/:userId",

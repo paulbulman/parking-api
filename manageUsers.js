@@ -11,6 +11,8 @@ const fetchAll = async db => {
   const params = {
     TableName: process.env.TABLE_NAME,
     IndexName: "SK-PK-index",
+    ProjectionExpression:
+      "PK, firstName, lastName, registrationNumber, alternativeRegistrationNumber, commuteDistance",
     KeyConditionExpression: "SK = :sk",
     ExpressionAttributeValues: { ":sk": "PROFILE" }
   };
@@ -26,6 +28,8 @@ const fetchAll = async db => {
 const fetch = async (db, userId) => {
   const params = {
     TableName: process.env.TABLE_NAME,
+    ProjectionExpression:
+      "PK, firstName, lastName, registrationNumber, alternativeRegistrationNumber, commuteDistance",
     Key: {
       PK: `USER#${userId}`,
       SK: "PROFILE"
@@ -55,7 +59,9 @@ const update = async (db, userId, userData) => {
       ":firstName": userData.firstName,
       ":lastName": userData.lastName,
       ":registrationNumber": userData.registrationNumber,
-      ":alternativeRegistrationNumber": userData.alternativeRegistrationNumber,
+      ":alternativeRegistrationNumber": userData.alternativeRegistrationNumber
+        ? userData.alternativeRegistrationNumber
+        : null,
       ":commuteDistance": userData.commuteDistance
     },
     ReturnValues: "UPDATED_NEW"
