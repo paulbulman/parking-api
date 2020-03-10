@@ -31,7 +31,7 @@ exports.handler = router.handler({
           await manageUsers.fetch(db, request.paths.userId)
       },
       {
-        path: "/manageUsers/",
+        path: "/manageUsers",
         method: "POST",
         action: async (request, context) =>
           await manageUsers.add(cognito, db, request.body)

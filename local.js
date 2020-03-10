@@ -21,14 +21,14 @@ const app = express();
 const port = 4000;
 
 app.use(cors());
-app.get("/manageUsers/", async (req, res) => {
+app.get("/manageUsers", async (req, res) => {
   res.send(await manageUsers.fetchAll(db));
 });
 
 app.get("/manageUsers/:userId", async (req, res) => {
   res.send(await manageUsers.fetch(db, req.params["userId"]));
 });
-app.post("/manageUsers/", (req, res) => {
+app.post("/manageUsers", (req, res) => {
   textBody(req, res, async function(err, body) {
     res.send(await manageUsers.add(cognito, db, JSON.parse(body)));
   });

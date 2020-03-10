@@ -51,7 +51,11 @@ const add = async (cognito, db, userData) => {
     var cognitoParams = {
       UserPoolId: process.env.USER_POOL_ID,
       Username: userData.emailAddress,
-      UserAttributes: [{ Name: "email", Value: userData.emailAddress }]
+      UserAttributes: [
+        { Name: "email", Value: userData.emailAddress },
+        { Name: "given_name", Value: userData.firstName },
+        { Name: "family_name", Value: userData.lastName }
+      ]
     };
 
     const cognitoResponse = await cognito
@@ -65,7 +69,9 @@ const add = async (cognito, db, userData) => {
       Item: {
         PK: `USER#${userName}`,
         SK: "PROFILE",
-        emailAddress: userData.emailAddress
+        emailAddress: userData.emailAddress,
+        firstName: userData.firstName,
+        lastName: userData.lastName
       }
     };
 
