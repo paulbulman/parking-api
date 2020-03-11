@@ -58,7 +58,7 @@ app.get("/registrationNumbers", async (req, res) => {
 });
 
 app.get("/requests/:userId", async (req, res) => {
-  res.send(await requests.fetch(req.params["userId"]));
+  res.send(await requests.fetch(db, req.params["userId"]));
 });
 app.post("/requests/:userId", async (req, res) => {
   textBody(req, res, async function(err, body) {
