@@ -1,9 +1,9 @@
 const moment = require("moment-timezone");
+const bankHolidays = require("./bankHolidays");
 
 const timeZoneName = "Europe/London";
-const dateFormatString = "YYYY-MM-DD";
 
-const getCurrentDate = getMoment =>
+const createGetCurrentDate = getMoment => () =>
   getMoment()
     .clone()
     .tz(timeZoneName)
@@ -14,8 +14,8 @@ const isWorkingDay = (date, bankHolidays) =>
   date.isoWeekday() !== 7 &&
   bankHolidays.every(b => !date.isSame(b, "day"));
 
-const getCurrentActiveDates = (getMoment, bankHolidays) => {
-  const currentDate = getCurrentDate(getMoment);
+const createGetCurrentActiveDates = (getMoment, bankHolidays) => () => {
+  const currentDate = createGetCurrentDate(getMoment)();
   const lastDayOfNextMonth = currentDate
     .clone()
     .startOf("month")
@@ -31,12 +31,15 @@ const getCurrentActiveDates = (getMoment, bankHolidays) => {
   return activeDates.filter(d => isWorkingDay(d, bankHolidays));
 };
 
-module.exports = (getMoment, bankHolidays) => {
-  const toDateString = date => date.format(dateFormatString);
+const getCurrentDate = createGetCurrentDate(() => moment());
+const getCurrentActiveDates = createGetCurrentActiveDates(
+  () => moment(),
+  bankHolidays
+);
 
-  return {
-    getCurrentDateString: () => toDateString(getCurrentDate(getMoment)),
-    getCurrentActiveDateStrings: () =>
-      getCurrentActiveDates(getMoment, bankHolidays).map(toDateString)
-  };
+module.exports = {
+  getCurrentDate,
+  createGetCurrentDate,
+  getCurrentActiveDates,
+  createGetCurrentActiveDates
 };
