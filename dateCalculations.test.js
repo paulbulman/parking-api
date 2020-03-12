@@ -8,7 +8,7 @@ describe("get current date", () => {
 
       const result = dateCalculations.createGetCurrentDate(getMoment)();
 
-      const expectedMoment = moment(expectedResult);
+      const expectedMoment = moment(expectedResult).tz("Europe/London");
       const comparisonResult = result.isSame(expectedMoment, "day");
 
       expect(comparisonResult).toBe(true);
@@ -21,7 +21,7 @@ describe("get current date", () => {
 
 describe("get current active dates", () => {
   const checkContains = (actualResult, searchDate, expectedContainsDay) => {
-    const searchMoment = moment(searchDate);
+    const searchMoment = moment(searchDate).tz("Europe/London");
     const containsDay = actualResult.some(a => searchMoment.isSame(a, "day"));
 
     expect(containsDay).toBe(expectedContainsDay);
