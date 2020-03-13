@@ -62,12 +62,12 @@ const add = async (cognito, db, userData) => {
       .adminCreateUser(cognitoParams)
       .promise();
 
-    const userName = cognitoResponse.User.Username;
+    const userId = cognitoResponse.User.Username;
 
-    const dbParams = {
+    const params = {
       TableName: process.env.TABLE_NAME,
       Item: {
-        PK: `USER#${userName}`,
+        PK: `USER#${userId}`,
         SK: "PROFILE",
         emailAddress: userData.emailAddress,
         firstName: userData.firstName,
@@ -75,7 +75,7 @@ const add = async (cognito, db, userData) => {
       }
     };
 
-    await db.put(dbParams).promise();
+    await db.put(params).promise();
   } catch (error) {
     console.error("Unable to add user", JSON.stringify(error));
   }

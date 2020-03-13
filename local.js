@@ -62,7 +62,7 @@ app.get("/requests/:userId", async (req, res) => {
 });
 app.post("/requests/:userId", async (req, res) => {
   textBody(req, res, async function(err, body) {
-    res.send(await requests.update(req.params["userId"], JSON.parse(body)));
+    res.send(await requests.update(db, req.params["userId"], JSON.parse(body)));
   });
 });
 

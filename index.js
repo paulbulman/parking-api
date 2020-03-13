@@ -75,7 +75,7 @@ exports.handler = router.handler({
         path: "/requests/:userId",
         method: "POST",
         action: async (request, context) =>
-          await requests.update(request.paths.userId, request.body)
+          await requests.update(db, request.paths.userId, request.body)
       },
       {
         path: "/reservations",
