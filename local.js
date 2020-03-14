@@ -67,11 +67,11 @@ app.post("/requests/:userId", async (req, res) => {
 });
 
 app.get("/reservations", async (req, res) => {
-  res.send(await reservations.fetch());
+  res.send(await reservations.fetch(db));
 });
 app.post("/reservations", async (req, res) => {
   textBody(req, res, async function(err, body) {
-    res.send(await reservations.update(JSON.parse(body)));
+    res.send(await reservations.update(db, JSON.parse(body)));
   });
 });
 
