@@ -76,7 +76,7 @@ app.post("/reservations", async (req, res) => {
 });
 
 app.get("/summary/:userId", async (req, res) => {
-  res.send(await summary.fetch(req.params["userId"]));
+  res.send(await summary.fetch(db, req.params["userId"]));
 });
 
 app.get("/users", async (req, res) => {

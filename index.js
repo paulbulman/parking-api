@@ -92,7 +92,7 @@ exports.handler = router.handler({
         path: "/summary/:userId",
         method: "GET",
         action: async (request, context) =>
-          await summary.fetch(request.paths.userId)
+          await summary.fetch(db, request.paths.userId)
       },
       {
         path: "/users",
