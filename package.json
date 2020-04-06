@@ -19,11 +19,11 @@
   },
   "homepage": "https://github.com/paulbulman/parking-api#readme",
   "devDependencies": {
-    "aws-sdk": "^2.639.0",
+    "aws-sdk": "^2.653.0",
     "body": "^5.1.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "jest": "^25.1.0"
+    "jest": "^25.2.7"
   },
   "dependencies": {
     "aws-lambda-router": "^0.8.2",
