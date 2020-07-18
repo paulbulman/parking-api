@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "aws-lambda-router": "^0.8.2",
+    "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.28"
   }

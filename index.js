@@ -1,3 +1,4 @@
+const authentication = require("authentication");
 const manageUsers = require("manageUsers");
 const profile = require("profile");
 const registrationNumbers = require("registrationNumbers");
@@ -22,31 +23,61 @@ exports.handler = router.handler({
       {
         path: "/manageUsers",
         method: "GET",
-        action: async (request, context) => await manageUsers.fetchAll(db)
+        action: async (request, context) => {
+          authentication.checkUserHasRole(
+            request,
+            authentication.roles.UserAdmin
+          );
+          return await manageUsers.fetchAll(db);
+        }
       },
       {
         path: "/manageUsers/:userId",
         method: "GET",
-        action: async (request, context) =>
-          await manageUsers.fetch(db, request.paths.userId)
+        action: async (request, context) => {
+          authentication.checkUserHasRole(
+            request,
+            authentication.roles.UserAdmin
+          );
+          return await manageUsers.fetch(db, request.paths.userId);
+        }
       },
       {
         path: "/manageUsers",
         method: "POST",
-        action: async (request, context) =>
-          await manageUsers.add(cognito, db, request.body)
+        action: async (request, context) => {
+          authentication.checkUserHasRole(
+            request,
+            authentication.roles.UserAdmin
+          );
+          return await manageUsers.add(cognito, db, request.body);
+        }
       },
       {
         path: "/manageUsers/:userId",
         method: "PUT",
-        action: async (request, context) =>
-          await manageUsers.update(db, request.paths.userId, request.body)
+        action: async (request, context) => {
+          authentication.checkUserHasRole(
+            request,
+            authentication.roles.UserAdmin
+          );
+          return await manageUsers.update(
+            db,
+            request.paths.userId,
+            request.body
+          );
+        }
       },
       {
         path: "/manageUsers/:userId",
         method: "DELETE",
-        action: async (request, context) =>
-          await manageUsers.del(request.paths.userId)
+        action: async (request, context) => {
+          authentication.checkUserHasRole(
+            request,
+            authentication.roles.UserAdmin
+          );
+          return await manageUsers.del(request.paths.userId);
+        }
       },
       {
         path: "/profile/:userId",
@@ -80,13 +111,24 @@ exports.handler = router.handler({
       {
         path: "/reservations",
         method: "GET",
-        action: async (request, context) => await reservations.fetch(db)
+        action: async (request, context) => {
+          authentication.checkUserHasRole(
+            request,
+            authentication.roles.TeamLeader
+          );
+          return await reservations.fetch(db);
+        }
       },
       {
         path: "/reservations",
         method: "POST",
-        action: async (request, context) =>
-          await reservations.update(db, request.body)
+        action: async (request, context) => {
+          authentication.checkUserHasRole(
+            request,
+            authentication.roles.TeamLeader
+          );
+          return await reservations.update(db, request.body);
+        }
       },
       {
         path: "/summary/:userId",
@@ -97,8 +139,15 @@ exports.handler = router.handler({
       {
         path: "/users",
         method: "GET",
-        action: async (request, context) => await users.fetch(db)
+        action: async (request, context) => {
+          authentication.checkUserHasRole(
+            request,
+            authentication.roles.TeamLeader
+          );
+          return await users.fetch(db);
+        }
       }
-    ]
+    ],
+    errorMapping: { Forbidden: 403 }
   }
 });

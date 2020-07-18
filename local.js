@@ -1,3 +1,4 @@
+const authentication = require("./authentication");
 const manageUsers = require("./manageUsers");
 const profile = require("./profile");
 const registrationNumbers = require("./registrationNumbers");
@@ -22,25 +23,30 @@ const port = 4000;
 
 app.use(cors());
 app.get("/manageUsers", async (req, res) => {
+  authentication.checkUserHasRole(req, authentication.roles.UserAdmin);
   res.send(await manageUsers.fetchAll(db));
 });
 
 app.get("/manageUsers/:userId", async (req, res) => {
+  authentication.checkUserHasRole(req, authentication.roles.UserAdmin);
   res.send(await manageUsers.fetch(db, req.params["userId"]));
 });
 app.post("/manageUsers", (req, res) => {
-  textBody(req, res, async function(err, body) {
+  authentication.checkUserHasRole(req, authentication.roles.UserAdmin);
+  textBody(req, res, async function (err, body) {
     res.send(await manageUsers.add(cognito, db, JSON.parse(body)));
   });
 });
 app.put("/manageUsers/:userId", (req, res) => {
-  textBody(req, res, async function(err, body) {
+  authentication.checkUserHasRole(req, authentication.roles.UserAdmin);
+  textBody(req, res, async function (err, body) {
     res.send(
       await manageUsers.update(db, req.params["userId"], JSON.parse(body))
     );
   });
 });
 app.delete("/manageUsers/:userId", async (req, res) => {
+  authentication.checkUserHasRole(req, authentication.roles.UserAdmin);
   res.send(await manageUsers.del(req.params["userId"]));
 });
 
@@ -48,7 +54,7 @@ app.get("/profile/:userId", async (req, res) => {
   res.send(await profile.fetch(db, req.params["userId"]));
 });
 app.put("/profile/:userId", async (req, res) => {
-  textBody(req, res, async function(err, body) {
+  textBody(req, res, async function (err, body) {
     res.send(await profile.update(db, req.params["userId"], JSON.parse(body)));
   });
 });
@@ -61,16 +67,18 @@ app.get("/requests/:userId", async (req, res) => {
   res.send(await requests.fetch(db, req.params["userId"]));
 });
 app.post("/requests/:userId", async (req, res) => {
-  textBody(req, res, async function(err, body) {
+  textBody(req, res, async function (err, body) {
     res.send(await requests.update(db, req.params["userId"], JSON.parse(body)));
   });
 });
 
 app.get("/reservations", async (req, res) => {
+  authentication.checkUserHasRole(req, authentication.roles.TeamLeader);
   res.send(await reservations.fetch(db));
 });
 app.post("/reservations", async (req, res) => {
-  textBody(req, res, async function(err, body) {
+  authentication.checkUserHasRole(req, authentication.roles.TeamLeader);
+  textBody(req, res, async function (err, body) {
     res.send(await reservations.update(db, JSON.parse(body)));
   });
 });
@@ -80,6 +88,7 @@ app.get("/summary/:userId", async (req, res) => {
 });
 
 app.get("/users", async (req, res) => {
+  authentication.checkUserHasRole(req, authentication.roles.TeamLeader);
   res.send(await users.fetch(db));
 });
 
