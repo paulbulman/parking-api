@@ -110,11 +110,13 @@ const saveMonthlyData = async (db, userId, monthId, requests) => {
   }
 };
 
-const update = async (db, userId, postData) => {
-  createUpdate(db, dateCalculations.getCurrentActiveDates)(userId, postData);
-};
+const update = async (db, userId, postData) =>
+  await createUpdate(db, dateCalculations.getCurrentActiveDates)(
+    userId,
+    postData
+  );
 
 const fetch = async (db, userId) =>
-  createFetch(db, dateCalculations.getCurrentActiveDates)(userId);
+  await createFetch(db, dateCalculations.getCurrentActiveDates)(userId);
 
 module.exports = { fetch, createFetch, update, createUpdate };

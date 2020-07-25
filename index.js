@@ -14,162 +14,104 @@ AWS.config.update({ region: "eu-west-2" });
 const cognito = new AWS.CognitoIdentityServiceProvider();
 const db = new AWS.DynamoDB.DocumentClient();
 
-const router = require("aws-lambda-router");
+const api = require("lambda-api")({ version: "v1.0", base: "v1" });
 
-exports.handler = router.handler({
-  proxyIntegration: {
-    cors: true,
-    routes: [
-      {
-        path: "/manageUsers",
-        method: "GET",
-        action: async (request, context) => {
-          authentication.checkUserHasRole(
-            request,
-            authentication.roles.UserAdmin
-          );
-          return await manageUsers.fetchAll(db);
-        }
-      },
-      {
-        path: "/manageUsers/:userId",
-        method: "GET",
-        action: async (request, context) => {
-          authentication.checkUserHasRole(
-            request,
-            authentication.roles.UserAdmin
-          );
-          return await manageUsers.fetch(db, request.paths.userId);
-        }
-      },
-      {
-        path: "/manageUsers",
-        method: "POST",
-        action: async (request, context) => {
-          authentication.checkUserHasRole(
-            request,
-            authentication.roles.UserAdmin
-          );
-          return await manageUsers.add(cognito, db, request.body);
-        }
-      },
-      {
-        path: "/manageUsers/:userId",
-        method: "PUT",
-        action: async (request, context) => {
-          authentication.checkUserHasRole(
-            request,
-            authentication.roles.UserAdmin
-          );
-          return await manageUsers.update(
-            db,
-            request.paths.userId,
-            request.body
-          );
-        }
-      },
-      {
-        path: "/manageUsers/:userId",
-        method: "DELETE",
-        action: async (request, context) => {
-          authentication.checkUserHasRole(
-            request,
-            authentication.roles.UserAdmin
-          );
-          return await manageUsers.del(request.paths.userId);
-        }
-      },
-
-      {
-        path: "/profile/:userId",
-        method: "GET",
-        action: async (request, context) => {
-          authentication.checkUserHasId(request, request.paths.userId);
-          return await profile.fetch(db, request.paths.userId);
-        }
-      },
-      {
-        path: "/profile/:userId",
-        method: "PUT",
-        action: async (request, context) => {
-          authentication.checkUserHasId(request, request.paths.userId);
-          return await profile.update(db, request.paths.userId, request.body);
-        }
-      },
-
-      {
-        path: "/registrationNumbers",
-        method: "GET",
-        action: async (request, context) => await registrationNumbers.fetch(db)
-      },
-
-      {
-        path: "/requests/:userId",
-        method: "GET",
-        action: async (request, context) => {
-          authentication.checkUserHasRoleOrId(
-            request,
-            request.paths.userId,
-            authentication.roles.TeamLeader
-          );
-          return await requests.fetch(db, request.paths.userId);
-        }
-      },
-      {
-        path: "/requests/:userId",
-        method: "POST",
-        action: async (request, context) => {
-          authentication.checkUserHasRoleOrId(
-            request,
-            request.paths.userId,
-            authentication.roles.TeamLeader
-          );
-          return await requests.update(db, request.paths.userId, request.body);
-        }
-      },
-
-      {
-        path: "/reservations",
-        method: "GET",
-        action: async (request, context) => {
-          authentication.checkUserHasRole(
-            request,
-            authentication.roles.TeamLeader
-          );
-          return await reservations.fetch(db);
-        }
-      },
-      {
-        path: "/reservations",
-        method: "POST",
-        action: async (request, context) => {
-          authentication.checkUserHasRole(
-            request,
-            authentication.roles.TeamLeader
-          );
-          return await reservations.update(db, request.body);
-        }
-      },
-
-      {
-        path: "/summary/:userId",
-        method: "GET",
-        action: async (request, context) =>
-          await summary.fetch(db, request.paths.userId)
-      },
-
-      {
-        path: "/users",
-        method: "GET",
-        action: async (request, context) => {
-          authentication.checkUserHasRole(
-            request,
-            authentication.roles.TeamLeader
-          );
-          return await users.fetch(db);
-        }
-      }
-    ],
-    errorMapping: { Forbidden: 403 }
+api.get("/manageUsers", async (req, res) => {
+  res.cors();
+  if (authentication.userHasRole(req, authentication.roles.UserAdmin)) {
+    res.send(await manageUsers.fetchAll(db));
+  } else {
+    res.sendStatus(403);
   }
 });
+api.get("/manageUsers/:userId", async (req, res) => {
+  res.cors();
+  if (authentication.userHasRole(req, authentication.roles.UserAdmin)) {
+    res.send(await manageUsers.fetch(db, req.params.userId));
+  } else {
+    res.sendStatus(403);
+  }
+});
+api.post("/manageUsers", async (req, res) => {
+  res.cors();
+  if (authentication.userHasRole(req, authentication.roles.UserAdmin)) {
+    res.send(await manageUsers.add(cognito, db, req.body));
+  } else {
+    res.sendStatus(403);
+  }
+});
+api.put("/manageUsers/:userId", async (req, res) => {
+  res.cors();
+  if (authentication.userHasRole(req, authentication.roles.UserAdmin)) {
+    res.send(await manageUsers.update(db, req.params.userId, req.body));
+  } else {
+    res.sendStatus(403);
+  }
+});
+api.delete("/manageUsers/:userId", async (req, res) => {
+  res.cors();
+  if (authentication.userHasRole(req, authentication.roles.UserAdmin)) {
+    res.send(await manageUsers.del(req.params.userId));
+  } else {
+    res.sendStatus(403);
+  }
+});
+
+api.get("/profile/:userId", async (req, res) => {
+  res.cors();
+  res.send(await profile.fetch(db, req.params.userId));
+});
+api.put("/profile/:userId", async (req, res) => {
+  res.cors();
+  if (authentication.userHasId(req, req.params.userId)) {
+    res.send(await profile.update(db, req.params.userId, req.body));
+  } else {
+    res.sendStatus(403);
+  }
+});
+
+api.get("/registrationNumbers", async (req, res) => {
+  res.cors();
+  res.send(await registrationNumbers.fetch(db));
+});
+
+api.get("/requests/:userId", async (req, res) => {
+  res.cors();
+  res.send(await requests.fetch(db, req.params.userId));
+});
+api.post("/requests/:userId", async (req, res) => {
+  res.cors();
+  if (
+    authentication.userHasId(req, req.params.userId) ||
+    authentication.userHasRole(req, authentication.roles.TeamLeader)
+  ) {
+    res.send(await requests.update(db, req.params.userId, req.body));
+  } else {
+    res.sendStatus(403);
+  }
+});
+
+api.get("/reservations", async (req, res) => {
+  res.cors();
+  res.send(await reservations.fetch(db));
+});
+api.post("/reservations", async (req, res) => {
+  res.cors();
+  if (authentication.userHasRole(req, authentication.roles.TeamLeader)) {
+    res.send(await reservations.update(db, req.body));
+  } else {
+    res.sendStatus(403);
+  }
+});
+
+api.get("/summary/:userId", async (req, res) => {
+  res.cors();
+  res.send(await summary.fetch(db, req.params.userId));
+});
+
+api.get("/users", async (req, res) => {
+  res.cors();
+  res.send(await users.fetch(db));
+});
+
+exports.handler = async (event, context) => await api.run(event, context);

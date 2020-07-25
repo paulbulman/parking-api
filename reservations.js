@@ -101,10 +101,9 @@ const saveMonthlyData = async (db, monthId, reservations) => {
 };
 
 const fetch = async db =>
-  createFetch(db, dateCalculations.getCurrentActiveDates)();
+  await createFetch(db, dateCalculations.getCurrentActiveDates)();
 
-const update = async (db, postData) => {
-  createUpdate(db, dateCalculations.getCurrentActiveDates)(postData);
-};
+const update = async (db, postData) =>
+  await createUpdate(db, dateCalculations.getCurrentActiveDates)(postData);
 
 module.exports = { fetch, createFetch, update, createUpdate };
