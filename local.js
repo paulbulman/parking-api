@@ -26,7 +26,6 @@ app.get("/manageUsers", async (req, res) => {
   authentication.checkUserHasRole(req, authentication.roles.UserAdmin);
   res.send(await manageUsers.fetchAll(db));
 });
-
 app.get("/manageUsers/:userId", async (req, res) => {
   authentication.checkUserHasRole(req, authentication.roles.UserAdmin);
   res.send(await manageUsers.fetch(db, req.params["userId"]));
@@ -51,10 +50,12 @@ app.delete("/manageUsers/:userId", async (req, res) => {
 });
 
 app.get("/profile/:userId", async (req, res) => {
+  authentication.checkUserHasId(req, req.params["userId"]);
   res.send(await profile.fetch(db, req.params["userId"]));
 });
 app.put("/profile/:userId", async (req, res) => {
   textBody(req, res, async function (err, body) {
+    authentication.checkUserHasId(req, req.params["userId"]);
     res.send(await profile.update(db, req.params["userId"], JSON.parse(body)));
   });
 });
@@ -64,9 +65,19 @@ app.get("/registrationNumbers", async (req, res) => {
 });
 
 app.get("/requests/:userId", async (req, res) => {
+  authentication.checkUserHasRoleOrId(
+    req,
+    req.params["userId"],
+    authentication.roles.TeamLeader
+  );
   res.send(await requests.fetch(db, req.params["userId"]));
 });
 app.post("/requests/:userId", async (req, res) => {
+  authentication.checkUserHasRoleOrId(
+    req,
+    req.params["userId"],
+    authentication.roles.TeamLeader
+  );
   textBody(req, res, async function (err, body) {
     res.send(await requests.update(db, req.params["userId"], JSON.parse(body)));
   });

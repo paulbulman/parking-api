@@ -79,35 +79,55 @@ exports.handler = router.handler({
           return await manageUsers.del(request.paths.userId);
         }
       },
+
       {
         path: "/profile/:userId",
         method: "GET",
-        action: async (request, context) =>
-          await profile.fetch(db, request.paths.userId)
+        action: async (request, context) => {
+          authentication.checkUserHasId(request, request.paths.userId);
+          return await profile.fetch(db, request.paths.userId);
+        }
       },
       {
         path: "/profile/:userId",
         method: "PUT",
-        action: async (request, context) =>
-          await profile.update(db, request.paths.userId, request.body)
+        action: async (request, context) => {
+          authentication.checkUserHasId(request, request.paths.userId);
+          return await profile.update(db, request.paths.userId, request.body);
+        }
       },
+
       {
         path: "/registrationNumbers",
         method: "GET",
         action: async (request, context) => await registrationNumbers.fetch(db)
       },
+
       {
         path: "/requests/:userId",
         method: "GET",
-        action: async (request, context) =>
-          await requests.fetch(db, request.paths.userId)
+        action: async (request, context) => {
+          authentication.checkUserHasRoleOrId(
+            request,
+            request.paths.userId,
+            authentication.roles.TeamLeader
+          );
+          return await requests.fetch(db, request.paths.userId);
+        }
       },
       {
         path: "/requests/:userId",
         method: "POST",
-        action: async (request, context) =>
-          await requests.update(db, request.paths.userId, request.body)
+        action: async (request, context) => {
+          authentication.checkUserHasRoleOrId(
+            request,
+            request.paths.userId,
+            authentication.roles.TeamLeader
+          );
+          return await requests.update(db, request.paths.userId, request.body);
+        }
       },
+
       {
         path: "/reservations",
         method: "GET",
@@ -130,12 +150,14 @@ exports.handler = router.handler({
           return await reservations.update(db, request.body);
         }
       },
+
       {
         path: "/summary/:userId",
         method: "GET",
         action: async (request, context) =>
           await summary.fetch(db, request.paths.userId)
       },
+
       {
         path: "/users",
         method: "GET",
